@@ -1,14 +1,18 @@
 # Use an official Node.js image as the base
 FROM node:16
 
-RUN apt-get update && \
-    apt-get install -y \
-    ffmpeg \
-    webp && \
-    apt-get upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
+# Set the working directory inside the container
+WORKDIR /usr/src/app
 
-RUN git clone https://github.com/broken143/Simple-WaBot
-WORKDIR /Simple-WaBot
+# Copy package.json and package-lock.json files to the working directory
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
+
+# Copy the rest of the application code to the working directory
+COPY . .
+
+
+# Start the bot when the container starts
 CMD ["node", "index.js"]
